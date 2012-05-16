@@ -66,7 +66,7 @@ if (__FILE__ == $0) then
     opt :github_password, 'The Github password', :default => '', :required => true
     opt :github_hook, 'The Github hook, which is the name of the current domain', :default => '', :required => true
   end
-  account = GithubAccount.new(opts[:github_login,:github_password])
+  account = GithubAccount.new(opts[:github_login], opts[:github_password])
   account.test_hook(opts[:github_user_name],
                     opts[:github_repository_name],
                     opts[:github_hook])
