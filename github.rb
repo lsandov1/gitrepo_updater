@@ -1,9 +1,6 @@
-#!/usr/bin/env ruby
-
 require 'rubygems'
 require 'bundler/setup'
 require 'octokit'
-require 'trollop'
 
 class GithubAccount
   def initialize(login, pwd)
@@ -58,16 +55,3 @@ class GithubAccount
   end
 end
 
-if (__FILE__ == $0) then
-  opts = Trollop::options do
-    opt :github_user_name, 'The Github username', :default => 'ooyala'
-    opt :github_repository_name, 'The Github repository name', :default=>'', :required => true
-    opt :github_login, 'The Github login', :default => '', :required => true
-    opt :github_password, 'The Github password', :default => '', :required => true
-    opt :github_hook, 'The Github hook, which is the name of the current domain', :default => '', :required => true
-  end
-  account = GithubAccount.new(opts[:github_login], opts[:github_password])
-  account.test_hook(opts[:github_user_name],
-                    opts[:github_repository_name],
-                    opts[:github_hook])
- end 
