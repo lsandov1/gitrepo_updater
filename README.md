@@ -6,15 +6,15 @@ Clones and keeps updated local (git) repos.
 Installation
 ------------
 ~~~~
-bundle install
-bundle exec rackup -p <your desired port>
+bundle install # 1. install gems
+# 2. modify the config.ru if needed
+bundle exec rackup -p <your desired port> # 3. Start the server
 ~~~~
 
 Usage
 -----
 
 Specify the repo to clone/update
-
 
 ~~~~
 $ ./adder --help
@@ -29,5 +29,27 @@ Options:
                         --help, -e:   Show this message
 ~~~~
 
-the latter command, clones `https://github.com/lsandoval/test` (origin) on `/Users/leonardo/Devel` and indicates
-github_updater to be aware of any changes origin so it automatically upadtes (git pull)
+For example
+
+~~~~
+./adder -g lsandoval \
+        -i test \
+        -l /home/dev/tmp1 \
+        -t lsandoval \
+        -h Pw43129 \
+        -u http://csg-eng.ooyala.com/gitrepo_updater
+~~~~
+
+the latter command, clones `https://github.com/lsandoval/test` (origin) on `/home/dev/tmp1` and indicates
+the app to be aware of any changes in origin. When a new commit is pushed to origin, the
+app automatically updates (`git pull`) and run any restart command if given through the parameter `--restart-cmd`.
+
+Also, to see if the app is updating correctly, this command does a test push to the repo
+
+~~~~
+./push_test -g lsandoval \
+            -i test \
+            -t lsandoval \
+            -h <github pass> \
+            -u http://csg-eng.ooyala.com/gitrepo_updater
+~~~~
