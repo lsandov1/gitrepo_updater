@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+require 'trollop'
+require 'json'
+require 'octokit'
+require './github'
+
+def add_repo_to_file(github_user_name, github_repository_name, local_path, restart_cmd)
+
+  json_data = '{}'
+  filename = 'data.json'
+  if File.file? filename 
+    # read current data
+    open(filename) { |f| json_data = f.read }
+  end
+
+  # add/overwrite the git-repo/local path
+  data = JSON.parse(json_data)
+  data["#{github_user_name}/#{github_repository_name}"] = {local_path:local_path, restart_cmd:restart_cmd} 
+
+  # write it back
+  open(filename, 'w') { |f| f.write(JSON.generate(data)) }
+end
+
+def add_hook_to_repo(github_account,
+                     github_user_name,
+                     github_repository_name,
+                     hook='http://csg-eng.ooyala.com/puller')
+
+  github_account.create_hook(github_user_name,  github_repository_name, hook)
+end
+
+begin
+  opts = Trollop::options do
+    opt :github_user_name, 'The Github username', :default => 'ooyala'
+    opt :github_repository_name, 'The Github repository name', :default=>'', :required => true
+    opt :local_path, 'The local Github repository path', :default => '', :required => true
+    opt :restart_cmd, 'Command line to restart your app', :default => ''
+    opt :github_login, 'The Github login', :default => '', :required => true
+    opt :github_password, 'The Github password', :default => '', :required => true
+  end
+
+  add_hook_to_repo GithubAccount.new(opts[:github_login], opts[:github_password]),
+                   opts[:github_user_name],
+                   opts[:github_repository_name]
+
+  add_repo_to_file opts[:github_user_name],
+                   opts[:github_repository_name],
+                   opts[:local_path],
+                   opts[:restart_cmd]
+
+rescue => e
+  puts e.message
+end
