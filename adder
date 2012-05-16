@@ -27,7 +27,7 @@ end
 def add_hook_to_repo(github_account,
                      github_user_name,
                      github_repository_name,
-                     hook='http://csg-eng.ooyala.com/puller')
+                     hook)
 
   github_account.create_hook(github_user_name,  github_repository_name, hook)
 end
@@ -40,11 +40,13 @@ begin
     opt :restart_cmd, 'Command line to restart your app', :default => ''
     opt :github_login, 'The Github login', :default => '', :required => true
     opt :github_password, 'The Github password', :default => '', :required => true
+    opt :github_hook, 'The Github hook, which is the name of the current domain', :default => '', :required => true
   end
 
   add_hook_to_repo GithubAccount.new(opts[:github_login], opts[:github_password]),
                    opts[:github_user_name],
-                   opts[:github_repository_name]
+                   opts[:github_repository_name],
+                   opts[:github_hook]
 
   add_repo_to_file opts[:github_user_name],
                    opts[:github_repository_name],
