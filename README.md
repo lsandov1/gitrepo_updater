@@ -6,9 +6,9 @@ Clones and keeps updated local (git) repos.
 Installation
 ------------
 ~~~~
-bundle install # 1. install gems
-# 2. modify the config.ru if needed
-bundle exec rackup -p <your desired port> # 3. Start the server
+$ bundle install # 1. install gems
+$ vi config.ru # 2. modify the config.ru if needed
+$ bundle exec rackup -p <your desired port> # 3. Start the server
 ~~~~
 
 Usage
@@ -32,11 +32,11 @@ Options:
 For example
 
 ~~~~
-./adder -g lsandoval \
+$ ./adder -g lsandoval \
         -i test \
         -l /home/dev/tmp1 \
         -t lsandoval \
-        -h Pw43129 \
+        -h <github pass> \
         -u http://csg-eng.ooyala.com/gitrepo_updater
 ~~~~
 
@@ -47,7 +47,7 @@ app automatically updates (`git pull`) and run any restart command if given thro
 Also, to see if the app is updating correctly, this command does a test push to the repo
 
 ~~~~
-./push_test -g lsandoval \
+$ ./push_test -g lsandoval \
             -i test \
             -t lsandoval \
             -h <github pass> \
