@@ -7,7 +7,7 @@ require 'json'
 require 'octokit'
 require './github'
 
-def add_repo_to_file(github_user_name, github_repository_name, local_path, restart_cmd)
+def add_repo_to_file(github_user_name, github_repository_name, local_path, restart_cmd, github_hook)
 
   json_data = '{}'
   filename = 'data.json'
@@ -18,7 +18,9 @@ def add_repo_to_file(github_user_name, github_repository_name, local_path, resta
 
   # add/overwrite the git-repo/local path
   data = JSON.parse(json_data)
-  data["#{github_user_name}/#{github_repository_name}"] = {local_path:local_path, restart_cmd:restart_cmd} 
+  data["#{github_user_name}/#{github_repository_name}"] = {local_path:local_path, 
+                                                           restart_cmd:restart_cmd,
+                                                           github_hook:github_hook} 
 
   # write it back
   open(filename, 'w') { |f| f.write(JSON.generate(data)) }
@@ -51,7 +53,8 @@ begin
   add_repo_to_file opts[:github_user_name],
                    opts[:github_repository_name],
                    opts[:local_path],
-                   opts[:restart_cmd]
+                   opts[:restart_cmd],
+                   opts[:github_hook]
 
 rescue => e
   puts e.message
