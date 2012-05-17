@@ -18,9 +18,11 @@ def add_repo_to_file(github_user_name, github_repository_name, local_path, resta
 
   # add/overwrite the git-repo/local path
   data = JSON.parse(json_data)
-  data["#{github_user_name}/#{github_repository_name}"] = {local_path:local_path, 
-                                                           restart_cmd:restart_cmd,
-                                                           github_hook:github_hook} 
+
+  data["#{github_user_name}/#{github_repository_name}"] ||= []
+  data["#{github_user_name}/#{github_repository_name}"] << {local_path:local_path, 
+                                                            restart_cmd:restart_cmd,
+                                                            github_hook:github_hook} 
 
   # write it back
   open(filename, 'w') { |f| f.write(JSON.generate(data)) }
