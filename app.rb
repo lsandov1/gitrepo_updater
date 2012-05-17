@@ -9,7 +9,11 @@ require 'open-uri'
 
 helpers do
 
-  def exec(cmd) puts "Command: #{cmd}"; system(cmd) end
+  def exec(path, cmd) 
+    cmd = "/bin/bash -c \". $HOME/.profile; cd #{path} && #{cmd}\""
+    puts "Executing Command: #{cmd}"
+    `#{cmd}`
+  end
 
   def create_path(path) Dir.mkdir_p(path, 0700) end
 
@@ -25,13 +29,13 @@ helpers do
           if path
             if File.directory? path
               puts "Pulling"
-              exec("/bin/bash -c \". $HOME/.profile; cd #{path} && git pull \"")
-              exec("/bin/bash -c \". $HOME/.profile; cd #{path} && #{restart_cmd}\"") unless restart_cmd.empty?
+              exec(path, "git pull")
+              exec(path, restart_cmd) unless restart_cmd.empty?
             else
               puts "Cloning"
               FileUtils.mkdir_p path
-              Kernel.system("/bin/bash -c \". $HOME/.profile\"; cd #{path} && git clone git@github.com:#{key} .")
-              Kernel.system("/bin/bash -c \". $HOME/.profile\"; cd #{path} && #{restart_cmd}") unless restart_cmd.empty?
+              exec(path,"git clone git@github.com:#{key} .")
+              exec(path, restart_cmd) unless restart_cmd.empty?
             end
           end
         rescue =>e
