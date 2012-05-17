@@ -48,4 +48,5 @@ post '/' do
   github_repository_name = repository["name"]
   github_username = repository["owner"]["name"]
   update_restart github_username, github_repository_name
+  ''
 end
