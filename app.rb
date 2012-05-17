@@ -9,8 +9,9 @@ require 'open-uri'
 
 helpers do
 
-  def exec(path, cmd) 
+  def exec(path, cmd, msg) 
     cmd = "/bin/bash -c \". $HOME/.profile; cd #{path} && #{cmd}\""
+    puts msg
     puts "Executing Command: #{cmd}"
     `#{cmd}`
   end
@@ -28,14 +29,16 @@ helpers do
         begin
           if path
             if File.directory? path
-              puts "Pulling"
-              exec(path, "git pull")
-              exec(path, restart_cmd) unless restart_cmd.empty?
+              if File.directory? File.join(path,'.git') #if it's a git repo
+                exec(path, "git pull","Pulling")
+              else
+                exec(path,"git clone git@github.com:#{key} .","Cloning")
+              end
+              exec(path, restart_cmd, "Restarting") unless restart_cmd.empty?
             else
-              puts "Cloning"
               FileUtils.mkdir_p path
-              exec(path,"git clone git@github.com:#{key} .")
-              exec(path, restart_cmd) unless restart_cmd.empty?
+              exec(path,"git clone git@github.com:#{key} .","Cloning")
+              exec(path, restart_cmd,"Restarting") unless restart_cmd.empty?
             end
           end
         rescue =>e
