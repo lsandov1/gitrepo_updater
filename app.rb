@@ -29,9 +29,7 @@ helpers do
         begin
           if path
             if File.directory? path
-              if File.directory? File.join(path,'.git') #if it's a git repo
-                exec(path, "git pull","Pulling")
-              else
+              unless File.directory? File.join(path,'.git') #if it's a git repo
                 exec(path,"git clone git@github.com:#{key} .","Cloning")
               end
               exec(path, restart_cmd, "Restarting") unless restart_cmd.empty?
