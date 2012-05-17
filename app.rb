@@ -13,7 +13,7 @@ helpers do
     cmd = "/bin/bash -c \". $HOME/.profile; cd #{path} && #{cmd}\""
     puts msg
     puts "Executing Command: #{cmd}"
-    `#{cmd}`
+    puts `#{cmd}`
   end
 
   def create_path(path) Dir.mkdir_p(path, 0700) end
